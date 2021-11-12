@@ -16,7 +16,7 @@ For all **data** and intermediate **results**, we temporally store in the google
 
 ## Dependencies and softwares/programming language
 
-Python 3.8.3 (including packages - numpy, pandas, seaborn, matplotlib)
+Python 3.8.3 (including packages - numpy, pandas, seaborn, matplotlib, scipy, sklearn, torch)
 
 Gephi 0.92
 
@@ -99,14 +99,9 @@ We use https://simplemaps.com/ to visualize the targeted CBGs
 
 ## data and results
 
-As GitHub has an upper limit for repository size. Currently we uploaded large files to Google Drive ()
+As GitHub has an upper limit for repository size. Currently we uploaded large files to Google Drive (https://drive.google.com/drive/folders/1xO-DYfnMF9cYDJLareTQDKJNokYqukM1?usp=sharing)
 
-Download to data/pairs_full_12.npy:
-https://drive.google.com/file/d/18-XEX2wEx7IDhuFwkn-_GpzEkIKVItOk/view?usp=sharing 
-
-Download to data/dict_param_all_12.npy:
-https://drive.google.com/file/d/1SlVdDZkL3Yt8SEB326q7RMNivw6ILzgp/view?usp=sharing 
-
+Please download the files from the google drive for replication purposes.
 
 ## Cautions
 
