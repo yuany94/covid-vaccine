@@ -327,33 +327,7 @@ for variance_scale in [1.0]:
         results[keyword]['exchange_ori'] = copy.deepcopy(m)
         cache['exchange_ori'] = copy.deepcopy(dict_param['vaccination_rate'])
 
-#     uniform
-    vaccine_rate_cbg_inter = 1 - np.array([vc] * len(vaccine_rate_cbg_e))
 
-    dict_param['vaccination_rate'] = 1 - vaccine_rate_cbg_inter
-    dict_param['vaccination_rate'] *= variance_scale
-    dict_param['vaccination_rate'] = np.maximum(0, dict_param['vaccination_rate'])
-    dict_param['vaccination_rate'] = np.minimum(1, dict_param['vaccination_rate'])
-
-    dict_param['cbg_idx_groups_to_track'] = copy.deepcopy(cbg_idx_groups_to_track)
-
-    model_init_kwargs = {}
-
-    from disease_model import Model
-
-    if enable == 0 or enable == 5:
-        m = Model(
-            starting_seed=starting_seed,
-            num_seeds=25,
-            **model_init_kwargs)
-
-
-        m.init_exogenous_variables(**dict_param, **exogenous_model_kwargs)
-        m.init_endogenous_variables()
-        m.simulate_disease_spread(simulate_cases=True, simulate_deaths=True)
-
-        results[keyword]['original_uniform'] = copy.deepcopy(m)
-        cache['uniform'] = 1 - variance_scale * np.array([np.average(vaccine_rate_cbg_inter, weights=ori_sizes)] * len(vaccine_rate_cbg_e))
 
     map_idx = {int(k): dict_param['cbgs_to_idxs'][k] for k in dict_param['cbgs_to_idxs']}
     node_list = [int(cbg) for cbg in dict_param['cbgs_to_idxs']]
