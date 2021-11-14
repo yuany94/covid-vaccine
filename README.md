@@ -123,3 +123,15 @@ Please download the files from the google drive for replication purposes.
 ## Cautions
 
 For replication of US mobility network, we expect a server with >400 memory and >10h CPU time for a 30-day simulation. Please try synthetic data or a state-level simuation for the quick demo. 
+
+## Citation
+
+You are welcome to reuse our code or data, but please cite us:
+
+    @article{yuan2021mobility,
+      title={Mobility network reveals the impact of geographic vaccination heterogeneity on COVID-19},
+      author={Yuan, Yuan and Jahani, Eaman and Zhao, Shengjia and Ahn, Yong-Yeo and Pentland, Alex Sandy},
+      journal={medRxiv},
+      year={2021},
+      publisher={Cold Spring Harbor Laboratory Press}
+    }

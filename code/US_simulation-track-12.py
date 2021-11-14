@@ -110,7 +110,7 @@ for variance_scale in [1.0]:
     if state == 'all':
         vax_distribution = np.load('../results/vax_distribution.npy', allow_pickle=True).item()
     else:
-        vax_distribution = np.load('../campaign/vax_distribution_by_state.npy', allow_pickle=True).item()
+        vax_distribution = np.load('../results/vax_distribution_by_state.npy', allow_pickle=True).item()
         vax_distribution = vax_distribution[int(state)]
     if distribution in vax_distribution:
         dict_param['vaccination_rate'] = vax_distribution[distribution]
