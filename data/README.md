@@ -5,6 +5,7 @@ See https://drive.google.com/drive/folders/1xO-DYfnMF9cYDJLareTQDKJNokYqukM1?usp
 - bipartite_weight_12.npy: bipartite graph generated from pairs_full_12.npy; adjusted by areas and dwelll time
 - dict_param_all_12.npy: the input file for US simulation
 - dict_param_synthetic_[float].npy: input files for synthetic network simulation. the float is the lambda
+- state_dict_param/dict_param_*.npy state-level dict_params, numbers are state codes
 - poi2area.npy: area for each POI
 - poi2dwell_corrects_total_12.npy: median dwell time for each POI
 

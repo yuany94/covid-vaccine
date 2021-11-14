@@ -30,6 +30,8 @@ gephi/node_US_county.csv and edge_US_county.csv are the files used by gephi to g
 
 gephi/US.gephi is the Gephi input file; Figure 1 is produced in this way.
 
+gephi/viz_simulation.ipynb: code that generates simple version of synthetic networks for Fig S1
+
 Please download the Gephi software from https://gephi.org/users/download/ and then open US.gephi with Gephi.
 
 ## code
