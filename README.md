@@ -51,6 +51,10 @@ code/disease_model.py is based on the code derived from https://covid-mobility.s
 
 code/US_simulation-synthetic.py is the simulation code for synthetic networks.
 
+code/SI_metric.py is the file for the figures in SI
+
+code/state-level.py processes state-level simulations for SI
+
 You can run the code in the following way
 
     python US_simulation-synthetic.py  --vc=-1 --num_hours=720 --p_sick_at_t0=0.0001 --poi_psi=0.1  --home_beta=0.00 --state=synthetic_0.750000 --enable=0
@@ -62,6 +66,17 @@ You can run the code in the following way
  - home_beta: within CBG transmission parameter (see https://covid-mobility.stanford.edu//)
  - state: input file name (files available on google drive)
  - enable: used to run all hypothetic distribution (where enable=0) or a single one (1=original, 2=reverse, 3=exchange, 4=shuffle, 6=order)
+
+We can also run the following batch files, for example use parallel in linux
+
+    parallel --jobs 4 < run-synthetic.sh
+
+code/run-synthetic.sh batch process for synthetic network simulation
+
+code/run-nation.sh batch process for US simulation
+
+code/run-state.sh batch process for state-level simulation
+
 
 ### US network analysis
 
