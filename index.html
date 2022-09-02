@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Aug 2022</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="./css/bootstrap.css" rel="stylesheet"/>
+  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.css" rel='stylesheet' />
+  <script src="./js/bootstrap.bundle.min.js"></script>
+  <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.0/mapbox-gl.js"></script>
+  <title>Map</title>
+  <link href="./css/main.css" type="text/css" rel="stylesheet"/>
+  <script>
+    let map;
+    const viewControl = {onAdd:controlOnAdd,onRemove:controlOnRemove};
+    let radioFilters = ["", "2019 POI-CBG", "2019 POI-CBG + CBG-CBG", "2020 POI-CBG", "2021 POI-CBG"];
+    let checkFilters = ["strategy-algo", "strategy-central", "strategy-vax"];
+    let layersList = ["east-3imwpy","mid-34ahgx", "west-2hjh52"];
+    let currentRadioFilter = "2019 POI-CBG";
+    currentCheckFilters = ['strategy-algo'];
+    function controlOnAdd(map) {
+      let container = document.createElement('div');
+      container.id='map-toggle-controls';
+      const excontrol = document.getElementById('lcontrols')
+      container.appendChild(excontrol);
+      return container;
+    }
+    function controlOnRemove(map){
+      let container=document.getElementById('zoom-buttons');
+      container.parentNode.removeChild(container);
+    }
+    mapboxgl.accessToken = "pk.eyJ1IjoibWFwc3RlciIsImEiOiJja2RqNHAzaGwwYmR3MnNweTUxbmc2cGZ6In0.7zBonLsXUmBqrP5tTBaoaA"
+    const fields = {
+      cbg_id: {popup: "CBG ID"},
+      centrality: {popup: "Centrality"},
+      inferred_v: {popup: "Inferred Vax Rate"},
+      race_entro: {popup: "Race Entropy"},
+      age_index_: {popup: "Age Index Avg"},
+      age_index1: {popup: "Age Index Entropy"},
+      income_ind: {popup: "Income Index Avg"},
+      income_i_1: {popup: "Income Index Entropy"},
+      edu_index_: {popup: "Edu Index Avg"},
+      edu_index1: {popup: "Edu Index Entropy"}
+    }
+    popup = new mapboxgl.Popup({
+      closeButton: true,
+      closeOnClick: false
+    });
+    function init() {
+      map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapster/cl7bhcop7000014qi2kxqbr6c',
+        center: [-86.4235664482107, 24.906750399935262],
+        zoom: 3,
+        minZoom: 3,
+        maxZoom: 15
+      });
+      map.on('load', function() {
+        map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+        map.addControl(viewControl, 'top-right');
+        const clr = ["case",
+          ["all", ["==", ["get", "strategy_a"], 1],["==", ["get", "strategy_c"], 1],["==", ["get", "strategy_v"], 1]],"#0a0a0a",
+          ["all", ["==", ["get", "strategy_a"], 1],["==", ["get", "strategy_c"], 1]],"#aa50c0",
+          ["all", ["==", ["get", "strategy_a"], 1],["==", ["get", "strategy_v"], 1]],"#00f92c",
+          ["all", ["==", ["get", "strategy_c"], 1],["==", ["get", "strategy_v"], 1]],"#f7aa03",
+          ["==", ["get", "strategy_a"], 1],"#0093c0",
+          ["==", ["get", "strategy_c"], 1],"#aa182c",
+          ["==", ["get", "strategy_v"], 1],"#e7f903",
+          "#777777"
+        ];
+        layersList.forEach((lname) => {
+          map.setPaintProperty(lname,'circle-color',clr)
+          map.on("click", lname, function (e) {
+            let props=e.features[0].properties;
+            createPopup(e.lngLat,props);
+          });
+        });
+        document.getElementById("sradio1").addEventListener('change',setFilter)
+        document.getElementById("sradio2").addEventListener('change',setFilter)
+        document.getElementById("sradio3").addEventListener('change',setFilter)
+        document.getElementById("sradio4").addEventListener('change',setFilter)
+        document.getElementById("scheck1").addEventListener('change',setFilter)
+        document.getElementById("scheck2").addEventListener('change',setFilter)
+        document.getElementById("scheck3").addEventListener('change',setFilter)
+        map.fitBounds([[-120.36981459277708, 23.584496944893857], [-53.72966927033812, 50.4194320056759]]);
+        setFilter()
+      });
+    }
+    function setFilter(e) {
+      let filter = [ "all"];
+      if (e) {
+        const cname = e.target.id
+        const cid = parseInt(cname.substring(6))
+        if (cname.substring(1, 6) === "radio") {
+          currentRadioFilter = radioFilters[cid]
+        }
+      }
+      subfilter1 = ["any"]
+      if (document.getElementById("scheck1").checked) {
+        subfilter1.push(["==", ["get", "strategy_a"], 1])
+      }
+      if (document.getElementById("scheck2").checked) {
+        subfilter1.push(["==", ["get", "strategy_c"], 1])
+      }
+      if (document.getElementById("scheck3").checked) {
+        subfilter1.push(["==", ["get", "strategy_v"], 1])
+      }
+      if (subfilter1.length === 1) {
+        subfilter1.push(["boolean", false])
+      }
+      let subfilter2 = ["==", ["get", "network"], currentRadioFilter] ;
+      filter.push(subfilter1);
+      filter.push(subfilter2);
+      layersList.forEach( (lname) => {
+        console.log(filter)
+         map.setFilter(lname,filter)
+      })
+    }
+    function createPopup(point,data) {
+      console.log(data)
+      let content = "<table>";
+      let order = ['cbg_id', 'centrality', 'inferred_v', 'race_entro', 'age_index_', 'age_index1', 'income_ind', 'income_i_1', 'edu_index_', 'edu_index1'];
+      for (let ii=0 ; ii<order.length ; ii++) {
+        let dval = "";
+        if (data[order[ii]]) {
+          dval = data[order[ii]];
+          if (order[ii] !== 'cbg_id' && typeof(dval)==='number') {
+            dval = dval.toFixed(3)
+          }
+        }
+        content+="<tr><td class='popupText1'><b>"+fields[order[ii]].popup+":</b></td><td class='popupText2'><b>"+dval+"</b></td></tr>";
+      }
+      content+="</<table>";
+      popup.setLngLat(point).setHTML(content).addTo(map);
+    }
+  </script>
+</head>
+<body onload="init()">
+<div id="map"></div>
+<div id="state-legend" class="legend">
+</div>
+<div id="lcontrols" class="m-3 p-3">
+  <div class="row">
+    <div class="col-6">
+      <div class="input-group">
+        <div class="mb-3 form-check">
+          <input type="radio" class="form-check-input" id="sradio1" name="rg1" checked>
+          <label class="form-check-label" for="sradio1">2019 POI-CBG</label>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="mb-3 form-check">
+          <input type="radio" class="form-check-input" id="sradio2" name="rg1">
+          <label class="form-check-label" for="sradio2">2019 POI-CBG + CBG-CBG</label>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="mb-3 form-check">
+          <input type="radio" class="form-check-input" id="sradio3" name="rg1">
+          <label class="form-check-label" for="sradio3">2020 POI-CBG</label>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="mb-3 form-check">
+          <input type="radio" class="form-check-input" id="sradio4" name="rg1">
+          <label class="form-check-label" for="sradio4">2021 POI-CBG</label>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="input-group">
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="scheck1" checked>
+          <label class="form-check-label" for="scheck1">Optimized</label>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="scheck2">
+          <label class="form-check-label" for="scheck2">Most Central</label>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="scheck3">
+          <label class="form-check-label" for="scheck3">Least Vaccinated</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
